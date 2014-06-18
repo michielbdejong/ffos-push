@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  </head>
+  <body>
+  </body>
+  <script>
+   var emailEndpoint, imEndpoint;
+
+//// The user has logged in, now's a good time to register the channels
+//MyAppFramework.addEventListener('user-login', function() {
+//  setupAppRegistrations();
+//});
+
+function setupAppRegistrations() {
+ // Issue a register() call
+ // to register to listen for a notification,
+ // you simply call push.register
+ // Here, we'll register a channel for "email" updates.
+ // Channels can be for anything the app would like to get notifications for.
+ var reqEmail = navigator.push.register();
+ reqEmail.onsuccess = function(e) {
+   emailEndpoint = e.target.result;
+   console.log("email", emailEndpoint); // This is the "Hand wavey" way that the App 
+                                                // sends the endPoint back to the AppServer
+ }
+
+ // We'll also register a second channel for "im", because we're social and all about the socialists. Or something.
+ var reqIm = navigator.push.register();
+ reqIm.onsuccess = function(e) {
+   imEndpoint = e.target.result;
+   console.log("im", imEndpoint);
+ }
+}
+
+  navigator.mozSetMessageHandler('push', function(message) {
+    console.log(message);
+  });
+
+  // to unregister, you simply call..
+  //  navigator.push.unregister(emailEndpoint);
+  //  navigator.push.unregister(imEndpoint);
+  
+  // error recovery mechanism
+  navigator.mozSetMessageHandler('push-register', function(e) {
+     console.log(e, 'please call setupAppRegistrations(); again!');
+  });
+ 
+  </script>
+</html>
